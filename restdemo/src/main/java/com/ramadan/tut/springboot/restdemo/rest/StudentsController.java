@@ -2,12 +2,17 @@ package com.ramadan.tut.springboot.restdemo.rest;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ramadan.tut.springboot.restdemo.entity.Student;
+import com.ramadan.tut.springboot.restdemo.error.StudentErrorResponse;
+import com.ramadan.tut.springboot.restdemo.error.StudentNotFoundException;
 
 import jakarta.annotation.PostConstruct;
 
@@ -32,9 +37,20 @@ public class StudentsController {
     @GetMapping("/{studentId}")
     public Student getStudentById(@PathVariable int studentId) {
         studentId -= 1;
-        if(studentId >= 0 && studentId < this.students.size()) {
-            return this.students.get(studentId);
+        if(studentId < 0 || studentId >= this.students.size()) {
+            throw new StudentNotFoundException("Student id not found - " + studentId);
         }
-        return null;
+        return this.students.get(studentId);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<StudentErrorResponse> HandleException(StudentNotFoundException exc) {
+        StudentErrorResponse error = new StudentErrorResponse();
+
+        error.setStatus((HttpStatus.NOT_FOUND.value()));
+        error.setMessage(exc.getMessage());
+        error.setTimestamp(System.currentTimeMillis());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }
