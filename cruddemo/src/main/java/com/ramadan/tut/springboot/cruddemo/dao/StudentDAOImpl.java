@@ -41,7 +41,10 @@ public class StudentDAOImpl implements StudentDAO {
 
     @Override
     public List<Student> findByEmailDomain(String emailDomain) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByEmailDomain'");
+        TypedQuery<Student> query = entityManager.createQuery("FROM Student WHERE email LIKE :emailDomain ORDER BY lastName", Student.class);
+
+        query.setParameter("emailDomain", "%" + emailDomain);
+        
+        return query.getResultList();
     }
 }

@@ -23,8 +23,15 @@ public class CruddemoApplication {
 			// createStudent(studentDAO);
 			// createMultipleStudents(studentDAO);
 			// readStudent(studentDAO);
-			queryForStudents(studentDAO);
+			// queryForStudents(studentDAO);
+			queryForStudentsByEmailDomain(studentDAO, "gmail.com");
 		};
+	}
+
+	private void queryForStudentsByEmailDomain(StudentDAO studentDAO, String emailDomain) {
+		List<Student> students = studentDAO.findByEmailDomain(emailDomain);
+
+		students.forEach(student -> System.out.println(student));
 	}
 
 	private void queryForStudents(StudentDAO studentDAO) {
@@ -44,7 +51,7 @@ public class CruddemoApplication {
 		List<Student> students = List.of(
 			new Student("Paul", "Doe", "paul@gmail.com"),
 			new Student("Crayon", "Tyron", "crayon@gmail.com"),
-			new Student("Sam", "Doe", "sam@gmail.com"));
+			new Student("Sam", "Doe", "sam@hotmail.com"));
 
 		System.out.println("Saving student to DB");
 		students.forEach(student -> studentDAO.save(student));
