@@ -21,11 +21,36 @@ public class CruddemoApplication {
 	public CommandLineRunner commandLineRunner(StudentDAO studentDAO) {
 		return runner -> {
 			// createStudent(studentDAO);
-			// createMultipleStudents(studentDAO);
+			createMultipleStudents(studentDAO);
 			// readStudent(studentDAO);
 			// queryForStudents(studentDAO);
-			queryForStudentsByEmailDomain(studentDAO, "gmail.com");
+			// queryForStudentsByEmailDomain(studentDAO, "gmail.com");
+
+			// updateStudent(studentDAO, 1L, "Ahmad", "Tyson", "aaaa@gmail.com");
+			// readStudent(studentDAO, 1L);
+
+			// deleteStudent(studentDAO, 2L);
+
+			// deleteAllStudents(studentDAO);
 		};
+	}
+
+	private void deleteAllStudents(StudentDAO studentDAO) {
+		int deletedCount = studentDAO.deleteAll();
+		System.out.println("All students were deleted(" + deletedCount + ")!");
+	}
+
+	private void deleteStudent(StudentDAO studentDAO, Long id) {
+		studentDAO.delete(id);
+	}
+
+	private void updateStudent(StudentDAO studentDAO, Long id, String firstName, String lastName, String email) {
+		Student student = studentDAO.findById(id);
+		student.setFirstName(firstName);
+		student.setLastName(lastName);
+		student.setEmail(email);
+
+		studentDAO.update(student);
 	}
 
 	private void queryForStudentsByEmailDomain(StudentDAO studentDAO, String emailDomain) {
@@ -40,8 +65,8 @@ public class CruddemoApplication {
 		students.forEach(student -> System.out.println(student));
 	}
 
-	private void readStudent(StudentDAO studentDAO) {
-		Student student = studentDAO.findById(1L);
+	private void readStudent(StudentDAO studentDAO, Long id) {
+		Student student = studentDAO.findById(id);
 
 		System.out.println("Retreived Student: " + student);
 	}
