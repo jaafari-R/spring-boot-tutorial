@@ -2,6 +2,8 @@ package com.example.employeescrud.employee;
 
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +32,11 @@ public class EmployeeController {
 
     @GetMapping("/{employeeId}")
     public Employee getEmployeeById(@PathVariable int employeeId) {
-        return employeeService.findById(employeeId);
+        Employee employee = employeeService.findById(employeeId);
+        if(employee == null) {
+            throw new RuntimeException("Employee with the id " + employeeId + " was not found!");
+        }
+        return employee;
     }
 
     @PostMapping("/")
@@ -46,6 +52,11 @@ public class EmployeeController {
     // @ResponseStatus() // 204
     @DeleteMapping("/{employeeId}")
     public void deleteEmployee(@PathVariable int employeeId) {
+        Employee employee = employeeService.findById(employeeId);
+        if(employee == null) {
+            throw new RuntimeException("Employee with the id " + employeeId + " was not found!");
+        }
+
         employeeService.delete(employeeId);
     }
 }
