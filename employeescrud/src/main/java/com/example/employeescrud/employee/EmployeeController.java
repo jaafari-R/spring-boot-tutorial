@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
-    EmployeeDAO employeeDAO;
+    EmployeeService employeeService;
 
     @Autowired
-    public EmployeeController(EmployeeDAO employeeDAO) {
-        this.employeeDAO = employeeDAO;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @GetMapping("/")
     public List<Employee> getAllEmployees() {
-        return employeeDAO.findAll();
+        return employeeService.findAll();
     }
 }
