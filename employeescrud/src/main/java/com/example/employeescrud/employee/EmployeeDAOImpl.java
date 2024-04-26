@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 
 @Repository
 public class EmployeeDAOImpl implements EmployeeDAO {
@@ -24,6 +25,26 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         TypedQuery<Employee> query = entityManager.createQuery("FROM Employee", Employee.class);
         List<Employee> employees = query.getResultList();
         return employees;
+    }
+
+
+    @Override
+    public Employee findById(int id) {
+        Employee employee = entityManager.find(Employee.class, id);
+        return employee;
+    }
+
+
+    @Override
+    public Employee save(Employee employee) {
+        Employee newEmployee = entityManager.merge(employee);
+        return newEmployee;
+    }
+
+    @Override
+    public void delete(int id) {
+        Employee employee = this.findById(id);
+        entityManager.remove(employee);
     }
     
 }
